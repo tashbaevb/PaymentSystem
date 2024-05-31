@@ -1,14 +1,17 @@
+// User.java
 package com.example.PaymentSystem.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
-@Table(name = "users")
+@Table(name = "users") // Измените название таблицы, если нужно
 @NoArgsConstructor
 @Getter
 @Setter
@@ -23,13 +26,23 @@ public class User {
     String email;
 
     @Column(nullable = false)
-    String password, title;
+    String password;
+
+    @Column(nullable = false)
+    String title;
 
     @Column(nullable = true)
-    Integer INN, bank_account;
+    Integer INN;
+
+    @Column(nullable = true)
+    Integer bankAccount;
 
     @Column(nullable = false, unique = true)
     UUID appId;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    List<Transaction> transactions;
 
     @ManyToOne
     @JoinColumn(name = "role_id")
@@ -41,13 +54,13 @@ public class User {
     @Column(name = "reset_token_expire_time")
     LocalDateTime resetTokenExpireTime;
 
-    public User(Integer id, String email, String password, String title, Integer INN, Integer bank_account, UUID appId, UserRole role, String resetToken, LocalDateTime resetTokenExpireTime) {
+    public User(Integer id, String email, String password, String title, Integer INN, Integer bankAccount, UUID appId, UserRole role, String resetToken, LocalDateTime resetTokenExpireTime) {
         this.id = id;
         this.email = email;
         this.password = password;
         this.title = title;
         this.INN = INN;
-        this.bank_account = bank_account;
+        this.bankAccount = bankAccount;
         this.appId = UUID.randomUUID();
         this.role = role;
         this.resetToken = resetToken;

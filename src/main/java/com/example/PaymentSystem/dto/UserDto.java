@@ -1,18 +1,21 @@
+// UserDto.java
 package com.example.PaymentSystem.dto;
 
-import lombok.AccessLevel;
-import lombok.Data;
+import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.util.UUID;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class UserDto {
 
-    String email, password, title;
-
-    Integer INN, bank_account;
-
+    String email;
+    String password;
+    String title;
+    Integer INN;
+    Integer bankAccount;
     UUID appId;
 }
