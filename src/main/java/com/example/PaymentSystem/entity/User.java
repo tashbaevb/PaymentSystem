@@ -1,4 +1,3 @@
-// User.java
 package com.example.PaymentSystem.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -11,7 +10,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Entity
-@Table(name = "users") // Измените название таблицы, если нужно
+@Table(name = "users")
 @NoArgsConstructor
 @Getter
 @Setter

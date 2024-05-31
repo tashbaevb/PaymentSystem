@@ -13,9 +13,14 @@ import java.util.UUID;
 public class UserDto {
 
     String email;
+
     String password;
+
     String title;
+
     Integer INN;
+
     Integer bankAccount;
+
     UUID appId;
 }

@@ -1,4 +1,3 @@
-// Transaction.java
 package com.example.PaymentSystem.entity;
 
 import jakarta.persistence.*;
@@ -31,5 +30,4 @@ public class Transaction {
     @ManyToOne
     @JoinColumn(name = "user_id")
     User user;
-
 }

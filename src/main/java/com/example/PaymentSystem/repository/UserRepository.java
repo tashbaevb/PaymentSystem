@@ -1,4 +1,3 @@
-// UserRepository.java
 package com.example.PaymentSystem.repository;
 
 import com.example.PaymentSystem.entity.User;
@@ -12,7 +11,6 @@ import java.util.UUID;
 public interface UserRepository extends JpaRepository<User, Integer> {
     Optional<User> findByEmail(String email);
     User findByResetToken(String resetToken);
-//    Optional<User> findByAppId1(UUID appId);
     User findByAppId(UUID appId);
 }
 
