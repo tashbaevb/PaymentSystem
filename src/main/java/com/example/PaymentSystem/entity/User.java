@@ -5,10 +5,10 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Entity
 @Table(name = "users")
-@AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
@@ -23,7 +23,13 @@ public class User {
     String email;
 
     @Column(nullable = false)
-    String password;
+    String password, title;
+
+    @Column(nullable = true)
+    Integer INN, bank_account;
+
+    @Column(nullable = false, unique = true)
+    UUID appId;
 
     @ManyToOne
     @JoinColumn(name = "role_id")
@@ -34,4 +40,17 @@ public class User {
 
     @Column(name = "reset_token_expire_time")
     LocalDateTime resetTokenExpireTime;
+
+    public User(Integer id, String email, String password, String title, Integer INN, Integer bank_account, UUID appId, UserRole role, String resetToken, LocalDateTime resetTokenExpireTime) {
+        this.id = id;
+        this.email = email;
+        this.password = password;
+        this.title = title;
+        this.INN = INN;
+        this.bank_account = bank_account;
+        this.appId = UUID.randomUUID();
+        this.role = role;
+        this.resetToken = resetToken;
+        this.resetTokenExpireTime = resetTokenExpireTime;
+    }
 }

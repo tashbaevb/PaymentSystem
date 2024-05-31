@@ -2,14 +2,12 @@ package com.example.PaymentSystem.service.impl;
 
 import com.example.PaymentSystem.entity.User;
 import com.example.PaymentSystem.entity.UserRole;
-import com.example.PaymentSystem.exception.NotFoundException;
 import com.example.PaymentSystem.repository.UserRepository;
 import com.example.PaymentSystem.repository.UserRoleRepository;
 import com.example.PaymentSystem.service.AuthService;
 import com.example.PaymentSystem.service.EmailService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
@@ -42,6 +40,7 @@ public class AuthServiceImpl implements AuthService {
         UserRole userRole = userRoleRepository.findByRole("ROLE_USER");
 
         user.setRole(userRole);
+        user.setAppId(UUID.randomUUID());
 
         userRepository.save(user);
     }
