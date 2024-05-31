@@ -1,4 +1,3 @@
-// UserDto.java
 package com.example.PaymentSystem.dto;
 
 import lombok.*;
@@ -16,11 +15,7 @@ public class UserDto {
 
     String password;
 
-    String title;
-
-    Integer INN;
-
-    Integer bankAccount;
+    String title, INN, bankAccount;
 
     UUID appId;
 }

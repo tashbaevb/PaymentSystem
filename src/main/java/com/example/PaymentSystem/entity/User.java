@@ -30,11 +30,7 @@ public class User {
     @Column(nullable = false)
     String title;
 
-    @Column(nullable = true)
-    Integer INN;
-
-    @Column(nullable = true)
-    Integer bankAccount;
+    String INN, bankAccount;
 
     @Column(nullable = false, unique = true)
     UUID appId;
@@ -53,7 +49,7 @@ public class User {
     @Column(name = "reset_token_expire_time")
     LocalDateTime resetTokenExpireTime;
 
-    public User(Integer id, String email, String password, String title, Integer INN, Integer bankAccount, UUID appId, UserRole role, String resetToken, LocalDateTime resetTokenExpireTime) {
+    public User(Integer id, String email, String password, String title, String INN, String bankAccount, UUID appId, List<Transaction> transactions, UserRole role, String resetToken, LocalDateTime resetTokenExpireTime) {
         this.id = id;
         this.email = email;
         this.password = password;
@@ -61,6 +57,7 @@ public class User {
         this.INN = INN;
         this.bankAccount = bankAccount;
         this.appId = UUID.randomUUID();
+        this.transactions = transactions;
         this.role = role;
         this.resetToken = resetToken;
         this.resetTokenExpireTime = resetTokenExpireTime;

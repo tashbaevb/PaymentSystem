@@ -39,11 +39,15 @@ public class AuthServiceImpl implements AuthService {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         UserRole userRole = userRoleRepository.findByRole("ROLE_USER");
 
+        System.out.println("INN = " + user.getINN());
+        System.out.println("BANK = " + user.getBankAccount());
+
         user.setRole(userRole);
         user.setAppId(UUID.randomUUID());
 
         userRepository.save(user);
     }
+
 
     @Override
     public boolean isPresentEmail(String email) {
@@ -65,11 +69,11 @@ public class AuthServiceImpl implements AuthService {
         userRepository.save(user.get());
 
         String resetUrlFin = resetUrl + resetToken;
-        String emailText = "Hallo! " +
-                "\n\nBitte folgen Sie diesem Link, um Ihr Passwort zurückzusetzen: " + resetUrlFin;
+        String emailText = "Hello! " +
+                "\n\nnPlease follow this link to reset your password: " + resetUrlFin;
 
-        emailService.sendMessage(email, "Passwort zurückzusetzen", emailText);
-        return "Ein Link zum Zurücksetzen des Passworts wurde an Ihre E-Mail-Adresse gesendet " + email;
+        emailService.sendMessage(email, "Reset password", emailText);
+        return "A password reset link has been sent to your e-mail address " + email;
     }
 
     @Override

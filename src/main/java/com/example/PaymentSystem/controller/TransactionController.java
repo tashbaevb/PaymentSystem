@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/transactions")
+@RequestMapping("/transactions")
 @RequiredArgsConstructor
 public class TransactionController {
 
@@ -22,7 +22,7 @@ public class TransactionController {
         return transactionService.createTransaction(request);
     }
 
-    @GetMapping("/user-transactions")
+    @GetMapping("/getCompanies")
     public ResponseEntity<List<TransactionResponseDto>> getUserTransactions(Authentication authentication) {
         List<TransactionResponseDto> transactionDtos = transactionService.getUserTransactions(authentication);
         if (transactionDtos == null) {

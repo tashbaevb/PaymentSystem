@@ -28,7 +28,7 @@ public class AuthController {
     private final AuthService authService;
     private final UserMapper mapper;
 
-    @PostMapping("/level")
+    @PostMapping("/role")
     public UserRole createRole(@RequestBody UserRole userRole) {
         return authService.createRole(userRole);
     }
@@ -41,6 +41,9 @@ public class AuthController {
         }
 
         User user = mapper.toEntity(userDto);
+//        user.setINN(userDto.getINN());
+//        user.setBankAccount(userDto.getBankAccount());
+
         authService.register(user);
 
         String accessToken = jwtUtil.generateToken(userDto.getEmail());
