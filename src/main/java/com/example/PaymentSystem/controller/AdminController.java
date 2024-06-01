@@ -1,7 +1,7 @@
 package com.example.PaymentSystem.controller;
 
 import com.example.PaymentSystem.dto.TransactionResponseWrapper;
-import com.example.PaymentSystem.dto.UserDto;
+import com.example.PaymentSystem.dto.UserResponseDto;
 import com.example.PaymentSystem.service.AdminService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -20,7 +20,7 @@ public class AdminController {
     private final AdminService adminService;
 
     @GetMapping("/getAllUsers")
-    public ResponseEntity<List<UserDto>> getAllUsers() {
+    public ResponseEntity<List<UserResponseDto>> getAllUsers() {
         return adminService.getAllUsers();
     }
 

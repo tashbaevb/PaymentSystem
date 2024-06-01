@@ -19,9 +19,7 @@ public class Transaction {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Integer id;
 
-    String buyerName;
-
-    Integer buyerBankAccount;
+    String buyerName, buyerBankAccount;
 
     LocalDateTime transactionTime;
 

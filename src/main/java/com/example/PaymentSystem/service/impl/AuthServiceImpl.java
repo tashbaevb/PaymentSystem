@@ -78,12 +78,12 @@ public class AuthServiceImpl implements AuthService {
     public String saveNewPassword(String resetToken, String newPassword) {
         User user = userRepository.findByResetToken(resetToken);
         if (user == null || user.getResetTokenExpireTime().isBefore(LocalDateTime.now()))
-            return "Der Link zum Zurücksetzen des Passworts ist veraltet";
+            return "The link to reset the password is outdated";
 
         user.setPassword(passwordEncoder.encode(newPassword));
         user.setResetToken(null);
         user.setResetTokenExpireTime(null);
         userRepository.save(user);
-        return "Das Passwort wurde erfolgreich verändert. ";
+        return "The password has been successfully changed. ";
     }
 }

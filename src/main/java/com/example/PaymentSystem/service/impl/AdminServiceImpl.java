@@ -2,7 +2,7 @@ package com.example.PaymentSystem.service.impl;
 
 import com.example.PaymentSystem.dto.TransactionResponseDto;
 import com.example.PaymentSystem.dto.TransactionResponseWrapper;
-import com.example.PaymentSystem.dto.UserDto;
+import com.example.PaymentSystem.dto.UserResponseDto;
 import com.example.PaymentSystem.entity.Transaction;
 import com.example.PaymentSystem.entity.User;
 import com.example.PaymentSystem.mapper.TransactionMapper;
@@ -28,11 +28,13 @@ public class AdminServiceImpl implements AdminService {
     private final TransactionMapper transactionMapper;
 
     @Override
-    public ResponseEntity<List<UserDto>> getAllUsers() {
+    public ResponseEntity<List<UserResponseDto>> getAllUsers() {
         List<User> users = userRepository.findAll();
+        List<UserResponseDto> userDtos = userMapper.responsetoDtoList(users);
 
-        return ResponseEntity.ok(userMapper.toDtoList(users));
+        return ResponseEntity.ok(userDtos);
     }
+
 
     @Override
     public ResponseEntity<TransactionResponseWrapper> getAllTransactions(String sort) {

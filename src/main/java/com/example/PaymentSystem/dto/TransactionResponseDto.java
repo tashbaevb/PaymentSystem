@@ -13,9 +13,7 @@ public class TransactionResponseDto {
 
     Integer id;
 
-    String buyerName;
-
-    Integer buyerBankAccount;
+    String buyerName, buyerBankAccount;
 
     LocalDateTime transactionTime;
 

@@ -1,19 +1,20 @@
 package com.example.PaymentSystem.dto;
 
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
-import java.math.BigDecimal;
 import java.util.UUID;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class TransactionRequest {
+public class UserResponseDto {
 
-    String buyerName, buyerBankAccount;
+    String email, title, bankAccount;
 
     UUID appId;
-
-    BigDecimal price;
 }
