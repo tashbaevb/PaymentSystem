@@ -5,6 +5,7 @@ import com.example.PaymentSystem.dto.TransactionResponseDto;
 import com.example.PaymentSystem.entity.Transaction;
 import com.example.PaymentSystem.entity.User;
 import com.example.PaymentSystem.mapper.TransactionMapper;
+import com.example.PaymentSystem.repository.TransactionRepository;
 import com.example.PaymentSystem.repository.UserRepository;
 import com.example.PaymentSystem.service.TransactionService;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +24,7 @@ public class TransactionServiceImpl implements TransactionService {
 
     private final UserRepository userRepository;
     private final TransactionMapper transactionMapper;
+    private final TransactionRepository transactionRepository;
 
     @Override
     public ResponseEntity<String> createTransaction(TransactionRequest request) {
@@ -54,14 +56,56 @@ public class TransactionServiceImpl implements TransactionService {
     @Override
     public List<TransactionResponseDto> getUserTransactions(Authentication authentication) {
         String userEmail = authentication.getName();
+        User user = userRepository.findByEmail(userEmail).orElse(null);
+        if (user == null) {
+            return null;
+        }
+        List<Transaction> userTransactions = user.getTransactions();
+        return transactionMapper.convertToDtoList(userTransactions);
+    }
 
+    @Override
+    public List<TransactionResponseDto> getTransactionsForLastMonth(Authentication authentication) {
+        String userEmail = authentication.getName();
         User user = userRepository.findByEmail(userEmail).orElse(null);
         if (user == null) {
             return null;
         }
 
-        List<Transaction> userTransactions = user.getTransactions();
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime oneMonthAgo = now.minusMonths(1);
+        List<Transaction> transactions = transactionRepository.findAllByUserAndTransactionTimeBetween(user, oneMonthAgo, now);
 
-        return transactionMapper.convertToDtoList(userTransactions);
+        return transactionMapper.convertToDtoList(transactions);
+    }
+
+    @Override
+    public List<TransactionResponseDto> getTransactionsForLastWeek(Authentication authentication) {
+        String userEmail = authentication.getName();
+        User user = userRepository.findByEmail(userEmail).orElse(null);
+        if (user == null) {
+            return null;
+        }
+
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime oneWeekAgo = now.minusWeeks(1);
+        List<Transaction> transactions = transactionRepository.findAllByUserAndTransactionTimeBetween(user, oneWeekAgo, now);
+
+        return transactionMapper.convertToDtoList(transactions);
+    }
+
+    @Override
+    public List<TransactionResponseDto> getTransactionsForLastDay(Authentication authentication) {
+        String userEmail = authentication.getName();
+        User user = userRepository.findByEmail(userEmail).orElse(null);
+        if (user == null) {
+            return null;
+        }
+
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime oneDayAgo = now.minusDays(1);
+        List<Transaction> transactions = transactionRepository.findAllByUserAndTransactionTimeBetween(user, oneDayAgo, now);
+
+        return transactionMapper.convertToDtoList(transactions);
     }
 }

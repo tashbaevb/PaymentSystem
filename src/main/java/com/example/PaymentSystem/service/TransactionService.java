@@ -12,4 +12,10 @@ public interface TransactionService {
     ResponseEntity<String> createTransaction(TransactionRequest request);
 
     List<TransactionResponseDto> getUserTransactions(Authentication authentication);
+
+    List<TransactionResponseDto> getTransactionsForLastMonth(Authentication authentication);
+
+    List<TransactionResponseDto> getTransactionsForLastWeek(Authentication authentication);
+
+    List<TransactionResponseDto> getTransactionsForLastDay(Authentication authentication);
 }

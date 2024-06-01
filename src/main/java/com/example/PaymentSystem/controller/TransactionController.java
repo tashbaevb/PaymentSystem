@@ -23,8 +23,22 @@ public class TransactionController {
     }
 
     @GetMapping("/getCompanies")
-    public ResponseEntity<List<TransactionResponseDto>> getUserTransactions(Authentication authentication) {
-        List<TransactionResponseDto> transactionDtos = transactionService.getUserTransactions(authentication);
+    public ResponseEntity<List<TransactionResponseDto>> getUserTransactions(
+            Authentication authentication,
+            @RequestParam(required = false) String sort) {
+
+        List<TransactionResponseDto> transactionDtos;
+
+        if ("month".equalsIgnoreCase(sort)) {
+            transactionDtos = transactionService.getTransactionsForLastMonth(authentication);
+        } else if ("week".equalsIgnoreCase(sort)) {
+            transactionDtos = transactionService.getTransactionsForLastWeek(authentication);
+        } else if ("day".equalsIgnoreCase(sort)) {
+            transactionDtos = transactionService.getTransactionsForLastDay(authentication);
+        } else {
+            transactionDtos = transactionService.getUserTransactions(authentication);
+        }
+
         if (transactionDtos == null) {
             return ResponseEntity.notFound().build();
         }
