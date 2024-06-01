@@ -39,9 +39,6 @@ public class AuthServiceImpl implements AuthService {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         UserRole userRole = userRoleRepository.findByRole("ROLE_USER");
 
-        System.out.println("INN = " + user.getINN());
-        System.out.println("BANK = " + user.getBankAccount());
-
         user.setRole(userRole);
         user.setAppId(UUID.randomUUID());
 

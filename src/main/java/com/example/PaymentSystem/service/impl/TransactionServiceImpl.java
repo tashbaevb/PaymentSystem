@@ -12,6 +12,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -29,11 +31,17 @@ public class TransactionServiceImpl implements TransactionService {
             return ResponseEntity.badRequest().body("User not found for provided appId");
         }
 
+        BigDecimal price = request.getPrice();
+
+        BigDecimal percent = new BigDecimal("0.01");
+        BigDecimal discount = price.multiply(percent);
+        BigDecimal discountedPrice = price.subtract(discount);
+
         Transaction transaction = new Transaction();
         transaction.setBuyerName(request.getBuyerName());
         transaction.setBuyerBankAccount(request.getBuyerBankAccount());
         transaction.setTransactionTime(LocalDateTime.now());
-        transaction.setPrice(request.getPrice());
+        transaction.setPrice(discountedPrice.setScale(2, RoundingMode.HALF_UP));
         transaction.setUser(user);
 
         user.getTransactions().add(transaction);

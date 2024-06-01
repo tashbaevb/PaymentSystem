@@ -41,8 +41,6 @@ public class AuthController {
         }
 
         User user = mapper.toEntity(userDto);
-//        user.setINN(userDto.getINN());
-//        user.setBankAccount(userDto.getBankAccount());
 
         authService.register(user);
 

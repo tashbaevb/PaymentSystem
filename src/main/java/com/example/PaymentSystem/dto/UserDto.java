@@ -15,7 +15,7 @@ public class UserDto {
 
     String password;
 
-    String title, INN, bankAccount;
+    String title, bankAccount;
 
     UUID appId;
 }
