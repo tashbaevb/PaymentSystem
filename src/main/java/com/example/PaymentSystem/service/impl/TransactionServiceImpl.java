@@ -75,7 +75,11 @@ public class TransactionServiceImpl implements TransactionService {
         }
 
         List<TransactionResponseDto> transactionDtos = transactionMapper.convertToDtoList(transactions);
-        return new TransactionResponseWrapper(transactionDtos.size(), transactionDtos);
+        BigDecimal totalSum = transactions.stream()
+                .map(Transaction::getPrice)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        return new TransactionResponseWrapper(transactionDtos.size(), totalSum, transactionDtos);
     }
 
 

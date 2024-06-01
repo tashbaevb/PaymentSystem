@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -37,7 +38,6 @@ public class AdminServiceImpl implements AdminService {
     public ResponseEntity<TransactionResponseWrapper> getAllTransactions(String sort) {
         List<Transaction> transactions;
         LocalDateTime now = LocalDateTime.now();
-
         if ("month".equalsIgnoreCase(sort)) {
             transactions = transactionRepository.findAllByTransactionTimeBetween(now.minusMonths(1), now);
         } else if ("week".equalsIgnoreCase(sort)) {
@@ -49,8 +49,11 @@ public class AdminServiceImpl implements AdminService {
         }
 
         List<TransactionResponseDto> transactionDtos = transactionMapper.convertToDtoList(transactions);
-        TransactionResponseWrapper responseWrapper = new TransactionResponseWrapper(transactionDtos.size(), transactionDtos);
+        BigDecimal totalSum = transactions.stream()
+                .map(Transaction::getPrice)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
 
+        TransactionResponseWrapper responseWrapper = new TransactionResponseWrapper(transactionDtos.size(), totalSum, transactionDtos);
         return ResponseEntity.ok(responseWrapper);
     }
 }
