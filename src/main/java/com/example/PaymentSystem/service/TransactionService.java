@@ -5,6 +5,7 @@ import com.example.PaymentSystem.dto.TransactionResponseDto;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 public interface TransactionService {
@@ -12,6 +13,8 @@ public interface TransactionService {
     ResponseEntity<String> createTransaction(TransactionRequest request);
 
     List<TransactionResponseDto> getUserTransactions(Authentication authentication);
+
+    List<TransactionResponseDto> getTransactionsForPeriod(Authentication authentication, LocalDateTime startDate, LocalDateTime endDate);
 
     List<TransactionResponseDto> getTransactionsForLastMonth(Authentication authentication);
 

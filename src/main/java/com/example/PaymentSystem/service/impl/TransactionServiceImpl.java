@@ -64,48 +64,37 @@ public class TransactionServiceImpl implements TransactionService {
         return transactionMapper.convertToDtoList(userTransactions);
     }
 
-    @Override
-    public List<TransactionResponseDto> getTransactionsForLastMonth(Authentication authentication) {
+//    @Override
+    public List<TransactionResponseDto> getTransactionsForPeriod(Authentication authentication, LocalDateTime startDate, LocalDateTime endDate) {
         String userEmail = authentication.getName();
         User user = userRepository.findByEmail(userEmail).orElse(null);
         if (user == null) {
             return null;
         }
 
-        LocalDateTime now = LocalDateTime.now();
-        LocalDateTime oneMonthAgo = now.minusMonths(1);
-        List<Transaction> transactions = transactionRepository.findAllByUserAndTransactionTimeBetween(user, oneMonthAgo, now);
+        List<Transaction> transactions = transactionRepository.findAllByUserAndTransactionTimeBetween(user, startDate, endDate);
 
         return transactionMapper.convertToDtoList(transactions);
+    }
+
+    @Override
+    public List<TransactionResponseDto> getTransactionsForLastMonth(Authentication authentication) {
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime oneMonthAgo = now.minusMonths(1);
+        return getTransactionsForPeriod(authentication, oneMonthAgo, now);
     }
 
     @Override
     public List<TransactionResponseDto> getTransactionsForLastWeek(Authentication authentication) {
-        String userEmail = authentication.getName();
-        User user = userRepository.findByEmail(userEmail).orElse(null);
-        if (user == null) {
-            return null;
-        }
-
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime oneWeekAgo = now.minusWeeks(1);
-        List<Transaction> transactions = transactionRepository.findAllByUserAndTransactionTimeBetween(user, oneWeekAgo, now);
-
-        return transactionMapper.convertToDtoList(transactions);
+        return getTransactionsForPeriod(authentication, oneWeekAgo, now);
     }
 
     @Override
     public List<TransactionResponseDto> getTransactionsForLastDay(Authentication authentication) {
-        String userEmail = authentication.getName();
-        User user = userRepository.findByEmail(userEmail).orElse(null);
-        if (user == null) {
-            return null;
-        }
-
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime oneDayAgo = now.minusDays(1);
-        List<Transaction> transactions = transactionRepository.findAllByUserAndTransactionTimeBetween(user, oneDayAgo, now);
-
-        return transactionMapper.convertToDtoList(transactions);
+        return getTransactionsForPeriod(authentication, oneDayAgo, now);
     }
 }
