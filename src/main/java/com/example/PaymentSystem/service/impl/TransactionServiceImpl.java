@@ -2,6 +2,7 @@ package com.example.PaymentSystem.service.impl;
 
 import com.example.PaymentSystem.dto.TransactionRequest;
 import com.example.PaymentSystem.dto.TransactionResponseDto;
+import com.example.PaymentSystem.dto.TransactionResponseWrapper;
 import com.example.PaymentSystem.entity.Transaction;
 import com.example.PaymentSystem.entity.User;
 import com.example.PaymentSystem.mapper.TransactionMapper;
@@ -54,17 +55,31 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     @Override
-    public List<TransactionResponseDto> getUserTransactions(Authentication authentication) {
+    public TransactionResponseWrapper getUserTransactions(Authentication authentication, String sort) {
         String userEmail = authentication.getName();
         User user = userRepository.findByEmail(userEmail).orElse(null);
         if (user == null) {
             return null;
         }
-        List<Transaction> userTransactions = user.getTransactions();
-        return transactionMapper.convertToDtoList(userTransactions);
+
+        List<Transaction> transactions;
+        LocalDateTime now = LocalDateTime.now();
+        if ("month".equalsIgnoreCase(sort)) {
+            transactions = transactionRepository.findAllByUserAndTransactionTimeBetween(user, now.minusMonths(1), now);
+        } else if ("week".equalsIgnoreCase(sort)) {
+            transactions = transactionRepository.findAllByUserAndTransactionTimeBetween(user, now.minusWeeks(1), now);
+        } else if ("day".equalsIgnoreCase(sort)) {
+            transactions = transactionRepository.findAllByUserAndTransactionTimeBetween(user, now.minusDays(1), now);
+        } else {
+            transactions = user.getTransactions();
+        }
+
+        List<TransactionResponseDto> transactionDtos = transactionMapper.convertToDtoList(transactions);
+        return new TransactionResponseWrapper(transactionDtos.size(), transactionDtos);
     }
 
-//    @Override
+
+    //    @Override
     public List<TransactionResponseDto> getTransactionsForPeriod(Authentication authentication, LocalDateTime startDate, LocalDateTime endDate) {
         String userEmail = authentication.getName();
         User user = userRepository.findByEmail(userEmail).orElse(null);

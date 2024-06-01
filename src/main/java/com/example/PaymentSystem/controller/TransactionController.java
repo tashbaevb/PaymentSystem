@@ -2,6 +2,7 @@ package com.example.PaymentSystem.controller;
 
 import com.example.PaymentSystem.dto.TransactionRequest;
 import com.example.PaymentSystem.dto.TransactionResponseDto;
+import com.example.PaymentSystem.dto.TransactionResponseWrapper;
 import com.example.PaymentSystem.service.TransactionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -23,25 +24,14 @@ public class TransactionController {
     }
 
     @GetMapping("/getCompanies")
-    public ResponseEntity<List<TransactionResponseDto>> getUserTransactions(
+    public ResponseEntity<TransactionResponseWrapper> getUserTransactions(
             Authentication authentication,
             @RequestParam(required = false) String sort) {
 
-        List<TransactionResponseDto> transactionDtos;
-
-        if ("month".equalsIgnoreCase(sort)) {
-            transactionDtos = transactionService.getTransactionsForLastMonth(authentication);
-        } else if ("week".equalsIgnoreCase(sort)) {
-            transactionDtos = transactionService.getTransactionsForLastWeek(authentication);
-        } else if ("day".equalsIgnoreCase(sort)) {
-            transactionDtos = transactionService.getTransactionsForLastDay(authentication);
-        } else {
-            transactionDtos = transactionService.getUserTransactions(authentication);
-        }
-
-        if (transactionDtos == null) {
+        TransactionResponseWrapper transactionResponseWrapper = transactionService.getUserTransactions(authentication, sort);
+        if (transactionResponseWrapper == null) {
             return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.ok(transactionDtos);
+        return ResponseEntity.ok(transactionResponseWrapper);
     }
 }
