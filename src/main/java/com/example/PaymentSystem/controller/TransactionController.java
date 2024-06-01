@@ -1,7 +1,6 @@
 package com.example.PaymentSystem.controller;
 
 import com.example.PaymentSystem.dto.TransactionRequest;
-import com.example.PaymentSystem.dto.TransactionResponseDto;
 import com.example.PaymentSystem.dto.TransactionResponseWrapper;
 import com.example.PaymentSystem.service.TransactionService;
 import lombok.RequiredArgsConstructor;
@@ -9,7 +8,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 
 @RestController
 @RequestMapping("/transactions")

@@ -15,11 +15,11 @@ public interface TransactionService {
 
     TransactionResponseWrapper getUserTransactions(Authentication authentication, String sort);
 
-    List<TransactionResponseDto> getTransactionsForPeriod(Authentication authentication, LocalDateTime startDate, LocalDateTime endDate);
-
-    List<TransactionResponseDto> getTransactionsForLastMonth(Authentication authentication);
-
-    List<TransactionResponseDto> getTransactionsForLastWeek(Authentication authentication);
-
-    List<TransactionResponseDto> getTransactionsForLastDay(Authentication authentication);
+//    List<TransactionResponseDto> getTransactionsForPeriod(Authentication authentication, LocalDateTime startDate, LocalDateTime endDate);
+//
+//    List<TransactionResponseDto> getTransactionsForLastMonth(Authentication authentication);
+//
+//    List<TransactionResponseDto> getTransactionsForLastWeek(Authentication authentication);
+//
+//    List<TransactionResponseDto> getTransactionsForLastDay(Authentication authentication);
 }

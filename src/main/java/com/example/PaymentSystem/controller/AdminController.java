@@ -1,12 +1,13 @@
 package com.example.PaymentSystem.controller;
 
-import com.example.PaymentSystem.dto.TransactionResponseDto;
+import com.example.PaymentSystem.dto.TransactionResponseWrapper;
 import com.example.PaymentSystem.dto.UserDto;
 import com.example.PaymentSystem.service.AdminService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -24,7 +25,13 @@ public class AdminController {
     }
 
     @GetMapping("/getAllTransactions")
-    public ResponseEntity<List<TransactionResponseDto>> getAllTransactions() {
-        return adminService.getAllTransactions();
+    public ResponseEntity<TransactionResponseWrapper> getAllTransactions(
+            @RequestParam(required = false) String sort) {
+
+        TransactionResponseWrapper transactionResponseWrapper = adminService.getAllTransactions(sort).getBody();
+        if (transactionResponseWrapper == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(transactionResponseWrapper);
     }
 }
