@@ -1,138 +1,106 @@
-# Backend Payment system for Programming championship Hackaton
+# Backend Payment System for Programming Championship Hackathon
 
-## Технический стек
+## Technical Stack
 
-Java, Spring(Boot, Security, Hibernate) Postgres
+- Java
+- Spring (Boot, Security, Hibernate)
+- Postgres
 
+## How to Build and Run the Project
 
+### Dependencies
+- `java` >= 17.0.0
+- `spring-boot` >= 3.0
+- `postgres` >= 16.2.0
+- `maven` >= 3.9.0
 
-## Как собрать и запустить проект
+### Before Creating the Project
 
-### Зависимости
-- `java`>=17.0.0
-- `postgres`>=16.2.0
-- `maven`>=3.9.0
+To set up the database, you need to create a database in **PostgreSQL**.
 
-
-### Перед созданием проекта
-
-Чтобы настроить базу данных, вам необходимо создать базу данных в **postgresql**.
-
-**Войдите в оболочку psql**
-```
+**Enter the psql shell**
+```sh
 psql -U postgres
 ```
 
-**В оболочке psql создайте Базу Данных**
+**Create the Database in the psql shell**
+```sql
+CREATE DATABASE your_db_name;
 ```
-CREATE DATABASE you_db_name;
-```
 
-**Настройте конфигурации** в `PaymentSystem/src/main/resources/application.properties` 
+**Configure settings** in `PaymentSystem/src/main/resources/application.properties`
 
+### Building the Project
 
-
-### Строительный проект
-
-**Установите все необходимые пакеты с помощью maven**
-
-```
+**Install all necessary packages using Maven**
+```sh
 mvn clean install
 ```
 
-**Запуск проекта**
-```
+**Run the project**
+```sh
 mvn spring-boot:run
 ```
 
-
-**Сборка проекта**
-
-```
+**Package the project**
+```sh
 mvn clean package
 ```
 
-чтобы запустить в виде jar файла
-
-```
+To run it as a jar file
+```sh
 java -jar target/PaymentSystem-0.0.1-SNAPSHOT.jar
 ```
 
+## API Documentation for the Payment System
 
-## Документация API платежной системы
+This document provides an overview of the endpoints available in the Payment System API, including their parameters, request bodies, and responses.
 
-Эта документация предоставляет подробную информацию о доступных конечных точках API платежной системы. Каждая конечная точка объясняется с необходимыми параметрами, телами запросов и возможными ответами.
+---
 
-### Контроллер транзакций
+#### Transaction Controller
 
-#### Создать транзакцию
+##### POST /transactions/create
+Creates a new transaction.
 
-**Конечная точка:** `POST /transactions/create`
-
-**Описание:** Создает новую транзакцию с указанными деталями.
-
-**Тело запроса:**
-
+**Request Body:**
 ```json
 {
   "buyerName": "string",
-  "buyerBankAccount": 0,
+  "buyerBankAccount": "string",
   "appId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
   "price": 0
 }
 ```
 
-**Ответы:**
+**Responses:**
+- **200 OK:** Transaction created successfully. Returns a string message.
+- **400 Bad Request:** Invalid input. Returns an `ExceptionResponse` object.
+- **403 Forbidden:** Access denied. Returns an `ExceptionResponse` object.
+- **404 Not Found:** Resource not found. Returns an `ExceptionResponse` object.
 
-- `200 OK`: Транзакция успешно создана.
-- `400 Bad Request`: Неверные данные ввода.
-- `403 Forbidden`: Доступ запрещен.
-- `404 Not Found`: Ресурс не найден.
+---
 
-#### Получить компании
+##### GET /transactions/getCompanies
+Retrieves a list of companies with their transactions.
 
-**Конечная точка:** `GET /transactions/getCompanies`
+**Parameters:**
+- **sort (query, string):** Optional sorting parameter.
 
-**Описание:** Получает список транзакций, с возможностью сортировки.
+**Responses:**
+- **200 OK:** Returns a `TransactionResponseWrapper` object.
+- **400 Bad Request:** Invalid request. Returns an `ExceptionResponse` object.
+- **403 Forbidden:** Access denied. Returns an `ExceptionResponse` object.
+- **404 Not Found:** Resource not found. Returns an `ExceptionResponse` object.
 
-**Параметры:**
+---
 
-- `sort` (query, string): Критерии сортировки для транзакций.
+#### Auth Controller
 
-**Ответы:**
+##### POST /role
+Creates or updates a user role.
 
-- `200 OK`: Транзакции успешно получены.
-
-  ```json
-  {
-    "totalCount": 0,
-    "totalSum": 0,
-    "transactions": [
-      {
-        "id": 0,
-        "buyerName": "string",
-        "buyerBankAccount": 0,
-        "transactionTime": "2024-06-01T02:46:50.960Z",
-        "price": 0
-      }
-    ]
-  }
-  ```
-
-- `400 Bad Request`: Неверные данные ввода.
-- `403 Forbidden`: Доступ запрещен.
-- `404 Not Found`: Ресурс не найден.
-
-### Контроллер аутентификации
-
-#### Создать роль
-
-**Конечная точка:** `POST /role`
-
-**Описание:** Создает новую роль для пользователя.
-
-**Тело запроса:**
-
+**Request Body:**
 ```json
 {
   "id": 0,
@@ -140,39 +108,33 @@ java -jar target/PaymentSystem-0.0.1-SNAPSHOT.jar
 }
 ```
 
-**Ответы:**
+**Responses:**
+- **200 OK:** Role created/updated successfully. Returns a `UserRole` object.
+- **400 Bad Request:** Invalid input. Returns an `ExceptionResponse` object.
+- **403 Forbidden:** Access denied. Returns an `ExceptionResponse` object.
+- **404 Not Found:** Resource not found. Returns an `ExceptionResponse` object.
 
-- `200 OK`: Роль успешно создана.
-- `400 Bad Request`: Неверные данные ввода.
-- `403 Forbidden`: Доступ запрещен.
-- `404 Not Found`: Ресурс не найден.
+---
 
-#### Сброс пароля
+##### POST /reset/{resetToken}
+Resets the password using a reset token.
 
-**Конечная точка:** `POST /reset/{resetToken}`
+**Parameters:**
+- **resetToken (path, string):** The reset token.
+- **password (query, string):** The new password.
 
-**Описание:** Сбрасывает пароль с использованием предоставленного токена и нового пароля.
+**Responses:**
+- **200 OK:** Password reset successfully. Returns a string message.
+- **400 Bad Request:** Invalid input. Returns an `ExceptionResponse` object.
+- **403 Forbidden:** Access denied. Returns an `ExceptionResponse` object.
+- **404 Not Found:** Resource not found. Returns an `ExceptionResponse` object.
 
-**Параметры:**
+---
 
-- `resetToken` (path, string): Токен для сброса.
-- `password` (query, string): Новый пароль.
+##### POST /register
+Registers a new user.
 
-**Ответы:**
-
-- `200 OK`: Пароль успешно сброшен.
-- `400 Bad Request`: Неверные данные ввода.
-- `403 Forbidden`: Доступ запрещен.
-- `404 Not Found`: Ресурс не найден.
-
-#### Регистрация пользователя
-
-**Конечная точка:** `POST /register`
-
-**Описание:** Регистрирует нового пользователя.
-
-**Тело запроса:**
-
+**Request Body:**
 ```json
 {
   "email": "string",
@@ -183,21 +145,18 @@ java -jar target/PaymentSystem-0.0.1-SNAPSHOT.jar
 }
 ```
 
-**Ответы:**
+**Responses:**
+- **200 OK:** User registered successfully. Returns a `UserResponseDto` object.
+- **400 Bad Request:** Invalid input. Returns an `ExceptionResponse` object.
+- **403 Forbidden:** Access denied. Returns an `ExceptionResponse` object.
+- **404 Not Found:** Resource not found. Returns an `ExceptionResponse` object.
 
-- `200 OK`: Пользователь успешно зарегистрирован.
-- `400 Bad Request`: Неверные данные ввода.
-- `403 Forbidden`: Доступ запрещен.
-- `404 Not Found`: Ресурс не найден.
+---
 
-#### Аутентификация пользователя
+##### POST /auth
+Authenticates a user.
 
-**Конечная точка:** `POST /auth`
-
-**Описание:** Аутентифицирует пользователя с использованием предоставленных учетных данных.
-
-**Тело запроса:**
-
+**Request Body:**
 ```json
 {
   "email": "string",
@@ -208,161 +167,108 @@ java -jar target/PaymentSystem-0.0.1-SNAPSHOT.jar
 }
 ```
 
-**Ответы:**
+**Responses:**
+- **200 OK:** Authentication successful. Returns a `UserResponseDto` object.
+- **400 Bad Request:** Invalid input. Returns an `ExceptionResponse` object.
+- **403 Forbidden:** Access denied. Returns an `ExceptionResponse` object.
+- **404 Not Found:** Resource not found. Returns an `ExceptionResponse` object.
 
-- `200 OK`: Пользователь успешно аутентифицирован.
-- `400 Bad Request`: Неверные данные ввода.
-- `403 Forbidden`: Доступ запрещен.
-- `404 Not Found`: Ресурс не найден.
+---
 
-#### Запрос на сброс пароля
+##### GET /reset
+Requests a password reset.
 
-**Конечная точка:** `GET /reset`
+**Parameters:**
+- **email (query, string):** The email address for password reset.
 
-**Описание:** Запрашивает сброс пароля для указанного email.
+**Responses:**
+- **200 OK:** Password reset request successful. Returns a string message.
+- **400 Bad Request:** Invalid input. Returns an `ExceptionResponse` object.
+- **403 Forbidden:** Access denied. Returns an `ExceptionResponse` object.
+- **404 Not Found:** Resource not found. Returns an `ExceptionResponse` object.
 
-**Параметры:**
+---
 
-- `email` (query, string): Email адрес для сброса пароля.
+#### Chart Controller
 
-**Ответы:**
+##### GET /transactions/earningsChart
+Retrieves data for the earnings chart.
 
-- `200 OK`: Запрос на сброс пароля успешно отправлен.
-- `400 Bad Request`: Неверные данные ввода.
-- `403 Forbidden`: Доступ запрещен.
-- `404 Not Found`: Ресурс не найден.
+**Parameters:**
+- **sort (query, string):** Optional sorting parameter.
 
-### Контроллер администратора
+**Responses:**
+- **200 OK:** Returns an array of strings.
+- **400 Bad Request:** Invalid request. Returns an `ExceptionResponse` object.
+- **403 Forbidden:** Access denied. Returns an `ExceptionResponse` object.
+- **404 Not Found:** Resource not found. Returns an `ExceptionResponse` object.
 
-#### Получить всех пользователей
+---
 
-**Конечная точка:** `GET /admin/getAllUsers`
+#### Admin Controller
 
-**Описание:** Получает список всех пользователей.
+##### GET /admin/getAllUsers
+Retrieves a list of all users.
 
-**Ответы:**
+**Responses:**
+- **200 OK:** Returns an array of `UserResponseDto` objects.
+- **400 Bad Request:** Invalid request. Returns an `ExceptionResponse` object.
+- **403 Forbidden:** Access denied. Returns an `ExceptionResponse` object.
+- **404 Not Found:** Resource not found. Returns an `ExceptionResponse` object.
 
-- `200 OK`: Пользователи успешно получены.
+---
 
-  ```json
-  [
-    {
-      "email": "string",
-      "password": "string",
-      "title": "string",
-      "bankAccount": "string",
-      "appId": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
-    }
-  ]
-  ```
+##### GET /admin/getAllTransactions
+Retrieves a list of all transactions.
 
-- `400 Bad Request`: Неверные данные ввода.
-- `403 Forbidden`: Доступ запрещен.
-- `404 Not Found`: Ресурс не найден.
+**Parameters:**
+- **sort (query, string):** Optional sorting parameter.
 
-#### Получить все транзакции
+**Responses:**
+- **200 OK:** Returns a `TransactionResponseWrapper` object.
+- **400 Bad Request:** Invalid request. Returns an `ExceptionResponse` object.
+- **403 Forbidden:** Access denied. Returns an `ExceptionResponse` object.
+- **404 Not Found:** Resource not found. Returns an `ExceptionResponse` object.
 
-**Конечная точка:** `GET /admin/getAllTransactions`
+---
 
-**Описание:** Получает список всех транзакций, с возможностью сортировки.
+#### Schemas
 
-**Параметры:**
+##### ExceptionResponse
+- **httpStatus (string):** HTTP status code.
+- **message (string):** Error message.
 
-- `sort` (query, string): Критерии сортировки для транзакций.
+##### TransactionRequest
+- **buyerName (string):** Name of the buyer.
+- **buyerBankAccount (string):** Bank account of the buyer.
+- **appId (string, $uuid):** Application ID.
+- **price (number):** Price of the transaction.
 
-**Ответы:**
+##### UserRole
+- **id (integer, $int32):** Role ID.
+- **role (string):** Role name.
 
-- `200 OK`: Транзакции успешно получены.
+##### UserDto
+- **email (string):** User's email.
+- **password (string):** User's password.
+- **title (string):** User's title.
+- **bankAccount (string):** User's bank account.
+- **appId (string, $uuid):** Application ID.
 
-  ```json
-  {
-    "totalCount": 0,
-    "totalSum": 0,
-    "transactions": [
-      {
-        "id": 0,
-        "buyerName": "string",
-        "buyerBankAccount": 0,
-        "transactionTime": "2024-06-01T02:46:50.986Z",
-        "price": 0
-      }
-    ]
-  }
-  ```
+##### TransactionResponseDto
+- **id (integer, $int32):** Transaction ID.
+- **buyerName (string):** Name of the buyer.
+- **buyerBankAccount (string):** Bank account of the buyer.
+- **transactionTime (string, $date-time):** Time of the transaction.
+- **price (number):** Price of the transaction.
 
-- `400 Bad Request`: Неверные данные ввода.
-- `403 Forbidden`: Доступ запрещен.
-- `404 Not Found`: Ресурс не найден.
+##### TransactionResponseWrapper
+- **totalCount (integer, $int64):** Total count of transactions.
+- **totalSum (number):** Total sum of transactions.
+- **transactions (array of TransactionResponseDto):** List of transactions.
 
-### Схемы
-
-#### ExceptionResponse
-
-```json
-{
-  "httpStatus": "string",
-  "message": "string"
-}
-```
-
-#### TransactionRequest
-
-```json
-{
-  "buyerName": "string",
-  "buyerBankAccount": 0,
-  "appId": "string",
-  "price": 0
-}
-```
-
-#### UserRole
-
-```json
-{
-  "id": 0,
-  "role": "string"
-}
-```
-
-#### UserDto
-
-```json
-{
-  "email": "string",
-  "password": "string",
-  "title": "string",
-  "bankAccount": "string",
-  "appId": "string"
-}
-```
-
-#### TransactionResponseDto
-
-```json
-{
-  "id": 0,
-  "buyerName": "string",
-  "buyerBankAccount": 0,
-  "transactionTime": "2024-06-01T02:46:50.986Z",
-  "price": 0
-}
-```
-
-#### TransactionResponseWrapper
-
-```json
-{
-  "totalCount": 0,
-  "totalSum": 0,
-  "transactions": [
-    {
-      "id": 0,
-      "buyerName": "string",
-      "buyerBankAccount": 0,
-      "transactionTime": "2024-06-01T02:46:50.986Z",
-      "price": 0
-    }
-  ]
-}
-```
+##### UserResponseDto
+- **email (string):** User's email.
+- **title (string):** User's title.
+- **bankAccount (string):** User's bank account.
+- **appId (string, $uuid):** Application ID.
